@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fixed Point Iteration</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fixed Point Iteration</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form method="POST">
+                    <label for="f_x">f(x):</label><br>
+                    <input type="text" id="f_x" name="f_x"><br>
+                    <label for="initial_guess">Initial Guess:</label><br>
+                    <input type="text" id="initial_guess" name="initial_guess"><br>
+                    <label for="tol">Tolerance:</label><br>
+                    <input type="text" id="tol" name="tol"><br>
+                    <label for="max_iteration">Max Iteration:</label><br>
+                    <input type="text" id="max_iteration" name="max_iteration"><br>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <div class="col">
+                <p>This app will try to find a root of the given f(x) function with "Fixed Iteration Method". Please use python's syntax for f(x) function to avoid errors.</p>
+                <p>Actual Roots</p>
+                <ol>
+                {% for root in actual_roots %}
+                    <li>{{ root }}</li>
+                {% endfor %}
+                </ol>
+                <p>Possible g(x) Functions</p>
+                <ol>
+                {% for g_x in possible_g_x_list %}
+                    <li>{{ g_x }}</li>
+                {% endfor %}
+                </ol>
+                    <p>Calculated Root: {{ found_root }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% for section in sections %}
+        <hr>
+        <h2>g(x) = {{ section.g_function }}</h2>
+        <table>
+            <tr>
+                <th>Iteration No</th>
+                <th>Root</th>
+                <th>Error</th>
+            </tr>
+            {% for iteration in section.iteration_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ iteration[0] }}</td>
+                    <td>{{ iteration[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="plot{{ loop.index }}"></div>
+        <script>
+            var trace1 = {
+                x: {{ section.x_values|tojson|safe }},
+                y: {{ section.y_values|tojson|safe }},
+                mode: 'lines',
+                name: 'f(x)'
+            };
+            var trace2 = {
+            x: {{ section.root_list|tojson|safe }},
+            y: {{ section.y_roots|tojson|safe }},
+            mode: 'markers',
+            name: 'g(x)',
+            text: Array.from({length: {{ section.root_list|length }}}, (_, i) => 'Iteration: ' + (i + 1)),
+            textposition: 'top'
+            };
+            var data = [trace1, trace2];
+            var layout = {
+                title: 'g(x) = ' + '{{ section.g_function }}',
+                xaxis: { title: 'x' },
+                yaxis: { title: 'y' }
+            };
+            Plotly.newPlot('plot{{ loop.index }}', data, layout);
+        </script>
+    {% endfor %}
+    <hr>
+</body>
+</html>
