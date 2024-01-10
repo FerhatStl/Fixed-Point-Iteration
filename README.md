@@ -5,6 +5,8 @@ This project developed as an homework for Numerical Analysis course provided by 
 
 Here is a video demonstration:
 
-https://github.com/FerhatStl/Fixed-Point-Iteration/assets/97604027/c0a0af43-7ba7-43bf-893c-707765d4478d
+https://github.com/FerhatStl/Fixed-Point-Iteration/assets/97604027/547847cf-0acf-408c-8835-82588701c92f
+
+
 
 
